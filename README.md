@@ -37,9 +37,17 @@ Este script hará lo siguiente:
 
 ## Ejecución de la Aplicación 
 
+1. Configura los .env en tu entorno
+
+En la raíz del proyecto, ejecuta el siguiente comando en una terminal 
+
+bash setup.sh
+
+Se te pediran las credenciales y variables de entorno que el proyecto necesita para funcionar correctamente
+
 Para ejecutar la aplicación, necesitas iniciar tanto el servidor del backend como el del frontend. Ambos procesos deben correr en terminales separadas.
 
-1. Iniciar el Backend (Flask)
+2. Iniciar el Backend (Flask)
 
 En una terminal, ejecuta el siguiente comando desde la raíz del proyecto:
 
@@ -48,7 +56,7 @@ bash backend.sh
 
 Este script activará el entorno virtual de Python y arrancará el servidor de Flask. Por defecto, estará disponible en http://127.0.0.1:5000.
 
-2. Iniciar el Frontend (Next.js)
+3. Iniciar el Frontend (Next.js)
 
 En otra terminal, ejecuta el siguiente comando desde la raíz del proyecto:
 
