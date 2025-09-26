@@ -5,6 +5,7 @@ import os, bcrypt, jwt
 from dotenv import load_dotenv
 import re
 import dns.resolver
+from datetime import datetime, timedelta, timezone
 
 load_dotenv()
 app = Flask(__name__)
@@ -106,7 +107,7 @@ def register():
         return jsonify({"error": "la contraseña debe tener al menos 6 caracteres"}), 400
 
     pw_hash = bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-    users.insert_one({"email": email, "password": pw_hash, "role": role})
+    users.insert_one({"email": email, "password": pw_hash, "role": role, "intents" : 0})
     return jsonify({"ok": True}), 201
 
 @app.route("/api/login", methods=["POST"])
@@ -116,10 +117,33 @@ def login():
     password = data.get("password")
     user = users.find_one({"email": email})
 
-    if not user or not bcrypt.checkpw(password.encode(), user["password"]):
-        return jsonify({"error": "credenciales inválidas"}), 400
+    if not email or not password:
+        return jsonify({"error": "email y contraseña son requeridos"}), 400
 
-    token = jwt.encode({"email": email, "role": user.get("role", "user")}, JWT_SECRET, algorithm="HS256")
+    if not user:
+        return jsonify({"error": "credenciales inválidas"}), 401
+    
+    intents = user.get("intents", 0)
+    if intents >= 5:
+        return jsonify({"error": "cuenta bloqueada por múltiples intentos fallidos. Contacta con un administrador"}), 403
+    
+    validate_password = bcrypt.checkpw(password.encode(), user["password"])
+
+    if not validate_password:
+        users.update_one({"email": email}, {"$inc": {"intents": 1}})
+        return jsonify({"error": "credenciales inválidas"}), 401
+    
+    if intents > 0:
+        users.update_one({"email": email}, {"$set": {"intents": 0}})
+
+    token_payload = {
+        "email": email,
+        "role": user.get("role", "user"),
+        "exp": datetime.now(timezone.utc) + timedelta(days=7),
+        "iat": datetime.now(timezone.utc)
+    }
+
+    token = jwt.encode(token_payload, JWT_SECRET, algorithm="HS256")
     return jsonify({"token": token})
 
 @app.route("/api/me")
@@ -131,6 +155,8 @@ def me():
     token = auth.split(" ")[1]
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+    except jwt.ExpiredSignatureError:
+        return jsonify({"error": "token expirado"}), 401
     except Exception:
         return jsonify({"error": "token inválido"}), 401
 
