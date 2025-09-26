@@ -95,13 +95,13 @@ def register():
         return jsonify({"error": "estructura de email inválida"}), 400
     
     if is_disposable_email(email):
-        return jsonify({"error": "no se permiten correos desechables"}), 400
+        return jsonify({"error": "datos incorrectos"}), 400
     
     if not validate_email_domain(email):
-        return jsonify({"error": "email incorrecto"}), 400
+        return jsonify({"error": "datos incorrectos"}), 400
 
     if users.find_one({"email": email}):
-        return jsonify({"error": "usuario ya existe"}), 400
+        return jsonify({"error": "datos incorrectos"}), 400
     
     if len(password) < 6:
         return jsonify({"error": "la contraseña debe tener al menos 6 caracteres"}), 400
