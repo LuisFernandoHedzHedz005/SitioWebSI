@@ -57,6 +57,23 @@ def validate_email_estructure(email):
     exp_reg = r"^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$"
     return re.match(exp_reg, email) is not None
 
+def validate_email_domain(email):
+   if "@" not in email:
+       return False
+   
+   domain = email.split('@')[1]
+   try:
+       mx_records = dns.resolver.resolve(domain, 'MX')
+       return len(mx_records) > 0
+   except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN, dns.exception.Timeout):
+       return False 
+   except Exception as e:
+       print(f"Error al validar el dominio del correo: {e}")
+       return False
+   
+with app.app_context():
+    load_blocklist()
+
 @app.route("/api/register", methods=["POST"])
 def register():
     data = request.get_json()
@@ -78,6 +95,9 @@ def register():
     
     if is_disposable_email(email):
         return jsonify({"error": "no se permiten correos desechables"}), 400
+    
+    if not validate_email_domain(email):
+        return jsonify({"error": "email incorrecto"}), 400
 
     if users.find_one({"email": email}):
         return jsonify({"error": "usuario ya existe"}), 400
