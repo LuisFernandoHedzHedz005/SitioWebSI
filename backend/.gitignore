@@ -1,0 +1,19 @@
+# Dependencias de Node.js
+/frontend/node_modules
+
+# Archivos de build de Next.js
+/frontend/.next/
+
+# Entorno virtual de Python
+/backend/venv/
+
+# Cache de Python
+/backend/__pycache__/
+
+# Archivos de entorno (contienen secretos)
+.env
+*.env.local
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db

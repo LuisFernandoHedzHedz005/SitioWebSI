@@ -87,14 +87,16 @@ export default function Home() {
           <h2>Lo que dicen nuestros miembros</h2>
           <div className="testimonials-grid">
             <div className="testimonial-card">
-              <p>"En solo 3 meses he transformado mi cuerpo y ganado confianza. Los entrenadores son increíbles."</p>
+              {/* Error bash */}
+              <p>&quot;En solo 3 meses he transformado mi cuerpo y ganado confianza. Los entrenadores son increíbles.&quot;</p>
               <div className="testimonial-author">
                 <strong>Carlos M.</strong>
                 <span>Miembro desde 2022</span>
               </div>
             </div>
             <div className="testimonial-card">
-              <p>"El ambiente motivador y las instalaciones de primera hacen que siempre quiera volver."</p>
+               {/* Error bash */}
+              <p>&quot;El ambiente motivador y las instalaciones de primera hacen que siempre quiera volver.&quot;</p>
               <div className="testimonial-author">
                 <strong>Ana L.</strong>
                 <span>Miembro desde 2023</span>

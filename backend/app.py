@@ -10,7 +10,8 @@ CORS(app)
 
 MONGO_URI = os.getenv("MONGO_URI")
 
-print(f"--- Intentando conectar con URI: {MONGO_URI} ---")
+#Eliminacion de print de mongoURI
+print(f"--- Intentando conectar con URI: ---")
 JWT_SECRET = os.getenv("SECRET_KEY", "devsecret")
 
 client = MongoClient(MONGO_URI, tls=True)

@@ -11,7 +11,8 @@ export default function Register() {
 
     async function submit(e) {
         e.preventDefault();
-        const res = await fetch('http://3.22.196.59:5000/api/register', {
+        //const res = await fetch('http://3.22.196.59:5000/api/register', {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password, role })
