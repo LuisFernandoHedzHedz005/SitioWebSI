@@ -139,7 +139,7 @@ def login():
     token_payload = {
         "email": email,
         "role": user.get("role", "user"),
-        "exp": datetime.now(timezone.utc) + timedelta(days=7),
+        "exp": datetime.now(timezone.utc) + timedelta(days=1),
         "iat": datetime.now(timezone.utc)
     }
 
